@@ -1,0 +1,2 @@
+Spring boot qrcode interface=====begin==============
+${spring-boot.version}

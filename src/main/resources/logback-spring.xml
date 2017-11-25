@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+	<!-- 文件输出格式 -->
+	<property name="PATTERN" value="%-12(%d{yyyy-MM-dd HH:mm:ss.SSS}) |-%-5level [%thread] %c [%L] -| %msg%n" />
+	<!-- test文件路径 -->
+	<property name="TEST_FILE_PATH" value="D:/cgjr_flow.log" />
+	<property name="DEV_FILE_PATH" value="/data/dev/java/logs/cgjr_flow.log" />
+	<property name="PRO_FILE_PATH" value="/data0/www/logs/apps/8150-sjd-flow/8150-sjd-flow.log" />
+
+	<logger name="com.apache.ibatis" level="OFF"/>
+	<logger name="ognl.OgnlParser" level="OFF"/>
+	<logger name="org.xml.sax.helpers.DefaultHandler" level="OFF"/>
+	<logger name="org.apache.commons.logging.Log" level="OFF"/>
+	<logger name="log4j.logger.org.mongodb.driver" level="OFF"/>
+	<logger name="log4j.logger.org.springframework" level="ERROR"/>
+
+
+	<!-- 控制台输出 -->
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>${PATTERN}</pattern>
+        </encoder> 
+    </appender>
+    
+	<!-- 正式环境 -->
+	<springProfile name="pro">
+		<!-- 每天产生一个文件 -->
+		<appender name="PRO-FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+			<!-- 文件路径 -->
+			<file>${PRO_FILE_PATH}</file>
+			<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+				<!-- 文件名称 -->
+				<fileNamePattern>${PRO_FILE_PATH}/info.%d{yyyy-MM-dd}.log</fileNamePattern>
+				<!-- 日志文件保留天数 -->
+				<MaxHistory>100</MaxHistory>
+			</rollingPolicy>
+			
+			<!-- 格式化输出 -->
+			<layout class="ch.qos.logback.classic.PatternLayout">
+				<pattern>${PATTERN}</pattern>
+			</layout>
+		</appender>
+		
+		<!--myibatis log configure--> 
+	    <logger name="com.apache.ibatis" level="ERROR"/>
+	    <logger name="java.sql.Connection" level="ERROR"/>
+	    <logger name="java.sql.Statement" level="ERROR"/>
+	    <logger name="java.sql.PreparedStatement" level="ERROR"/>
+		
+		<root level="info">
+			<appender-ref ref="PRO-FILE" />
+			<appender-ref ref="STDOUT" />
+		</root>
+	</springProfile>
+	
+	
+	<!-- 开发环境 -->
+	<springProfile name="dev">
+		<!-- 每天产生一个文件 -->
+		<appender name="DEV-FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+			<!-- 文件路径 -->
+			<file>${DEV_FILE_PATH}</file>
+			<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+				<!-- 文件名称 -->
+				<fileNamePattern>${DEV_FILE_PATH}/info.%d{yyyy-MM-dd}.log</fileNamePattern>
+				<!-- 日志文件保留天数 -->
+				<MaxHistory>100</MaxHistory>
+			</rollingPolicy>
+			
+			<layout class="ch.qos.logback.classic.PatternLayout">
+				<pattern>${PATTERN}</pattern>
+			</layout>
+		</appender>
+		
+		<!--myibatis log configure--> 
+	    <logger name="com.apache.ibatis" level="TRACE"/>
+	    <logger name="java.sql.Connection" level="DEBUG"/>
+	    <logger name="java.sql.Statement" level="DEBUG"/>
+	    <logger name="java.sql.PreparedStatement" level="DEBUG"/>
+		
+		<root level="debug">
+			<appender-ref ref="DEV-FILE" />
+			<appender-ref ref="STDOUT" />
+		</root>
+	</springProfile>
+
+	<!-- 测试环境 -->
+	<springProfile name="test">
+		<!-- 每天产生一个文件 -->
+		<appender name="TEST-FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+			<!-- 文件路径 -->
+			<file>${TEST_FILE_PATH}</file>
+			<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+				<!-- 文件名称 -->
+				<fileNamePattern>${TEST_FILE_PATH}/info.%d{yyyy-MM-dd}.log</fileNamePattern>
+				<!-- 日志文件保留天数 -->
+				<MaxHistory>100</MaxHistory>
+			</rollingPolicy>
+			
+			<layout class="ch.qos.logback.classic.PatternLayout">
+				<pattern>${PATTERN}</pattern>
+			</layout>
+		</appender>
+		
+		<!--myibatis log configure--> 
+	    <logger name="com.apache.ibatis" level="TRACE"/>
+	    <logger name="java.sql.Connection" level="DEBUG"/>
+	    <logger name="java.sql.Statement" level="DEBUG"/>
+	    <logger name="java.sql.PreparedStatement" level="DEBUG"/>
+
+		<root level="info">
+			<appender-ref ref="TEST-FILE" />
+			<appender-ref ref="STDOUT" />
+		</root>
+	</springProfile>
+</configuration>
+
